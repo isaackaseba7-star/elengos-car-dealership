@@ -81,8 +81,8 @@ const Hero = () => {
     <section className="relative h-screen flex items-center justify-center overflow-hidden">
       <div className="absolute inset-0 z-0">
         <img 
-          src="https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&q=80" 
-          alt="Premium Luxury Car" 
+          src="https://images.unsplash.com/photo-1629897048514-3dd7414df8b5?auto=format&fit=crop&q=80" 
+          alt="Toyota Car" 
           className="w-full h-full object-cover object-center transform scale-105 motion-safe:animate-[pulse_10s_ease-in-out_infinite]"
           referrerPolicy="no-referrer"
         />
@@ -116,7 +116,7 @@ const Hero = () => {
           transition={{ duration: 0.8, delay: 0.4 }}
           className="text-lg md:text-xl text-neutral-300 mb-10 max-w-2xl font-light"
         >
-          Premium vehicles, trusted service, and unbeatable deals. Visit our showroom in Ibex Main Street today.
+          High-quality, reliable everyday vehicles with trusted service and unbeatable deals. Visit our showroom in Ibex Main Street today.
         </motion.p>
         
         <motion.div 
@@ -148,56 +148,126 @@ const Hero = () => {
   );
 };
 
-// Component: Deposit Modal
-const DepositModal = ({ isOpen, onClose, carName }: { isOpen: boolean, onClose: () => void, carName: string }) => {
+// Component: Reservation Modal
+const ReservationModal = ({ isOpen, onClose, carName }: { isOpen: boolean, onClose: () => void, carName: string }) => {
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [step, setStep] = useState(1);
+
+  useEffect(() => {
+    if (!isOpen) {
+      setTimeout(() => {
+        setIsSubmitted(false);
+        setStep(1);
+      }, 300);
+    }
+  }, [isOpen]);
+
   if (!isOpen) return null;
   
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={onClose}></div>
-      <div className="relative bg-[#141414] border border-white/10 p-8 max-w-md w-full shadow-2xl overflow-hidden">
+      <div className="relative bg-[#141414] border border-white/10 p-8 max-w-md w-full shadow-2xl overflow-hidden rounded-xl">
          {/* Decorative elements */}
          <div className="absolute top-0 right-0 w-32 h-32 bg-gold-500/10 blur-3xl rounded-full"></div>
          <button onClick={onClose} className="absolute top-4 right-4 text-neutral-400 hover:text-white transition-colors">
             <X className="w-6 h-6" />
          </button>
          
-         <div className="mb-8">
-            <CreditCard className="w-10 h-10 text-gold-500 mb-4" />
-            <h3 className="font-serif text-3xl font-bold mb-2">Secure Deposit</h3>
-            <p className="text-neutral-400 text-sm">Hold the {carName} while we finalize the details. (Demo Interface)</p>
-         </div>
+         {!isSubmitted ? (
+           <>
+             {step === 1 ? (
+               <div className="animate-in fade-in zoom-in-95 duration-300">
+                 <div className="mb-6">
+                    <Clock className="w-10 h-10 text-gold-500 mb-4" />
+                    <h3 className="font-serif text-3xl font-bold mb-2">Reserve Vehicle</h3>
+                    <p className="text-neutral-400 text-sm">Hold the {carName} before finalizing your purchase.</p>
+                 </div>
 
-         <form className="space-y-5" onSubmit={(e) => { e.preventDefault(); alert("In a real environment, this would process the deposit."); onClose(); }}>
-            <div>
-              <label className="block text-xs uppercase tracking-wider text-neutral-500 mb-2">Full Name on Card</label>
-              <input type="text" className="w-full bg-black border border-white/10 p-3 text-white focus:outline-none focus:border-gold-500 transition-colors" placeholder="John Doe" required />
-            </div>
-            <div>
-              <label className="block text-xs uppercase tracking-wider text-neutral-500 mb-2">Card Number</label>
-              <input type="text" className="w-full bg-black border border-white/10 p-3 text-white focus:outline-none focus:border-gold-500 transition-colors tracking-widest" placeholder="**** **** **** ****" required />
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-               <div>
-                 <label className="block text-xs uppercase tracking-wider text-neutral-500 mb-2">Expiry Date</label>
-                 <input type="text" className="w-full bg-black border border-white/10 p-3 text-white focus:outline-none focus:border-gold-500 transition-colors" placeholder="MM/YY" required />
+                 <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); setStep(2); }}>
+                    <div>
+                      <label className="block text-xs uppercase tracking-wider text-neutral-500 mb-2">Full Name</label>
+                      <input type="text" className="w-full bg-black border border-white/10 p-3 text-white focus:outline-none focus:border-gold-500 transition-colors" placeholder="John Doe" required />
+                    </div>
+                    <div>
+                      <label className="block text-xs uppercase tracking-wider text-neutral-500 mb-2">Phone Number</label>
+                      <input type="tel" className="w-full bg-black border border-white/10 p-3 text-white focus:outline-none focus:border-gold-500 transition-colors" placeholder="097 8013825" required />
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                       <div>
+                         <label className="block text-xs uppercase tracking-wider text-neutral-500 mb-2">Hold Duration</label>
+                         <select className="w-full bg-black border border-white/10 p-3 text-white focus:outline-none focus:border-gold-500 transition-colors appearance-none" required>
+                            <option value="24h">24 Hours</option>
+                            <option value="48h">48 Hours</option>
+                            <option value="72h">3 Days</option>
+                            <option value="1w">1 Week</option>
+                         </select>
+                       </div>
+                       <div>
+                         <label className="block text-xs uppercase tracking-wider text-neutral-500 mb-2">Expected View Date</label>
+                         <input type="date" className="w-full bg-black border border-white/10 p-3 text-white focus:outline-none focus:border-gold-500 transition-colors" required />
+                       </div>
+                    </div>
+                    
+                    <button type="submit" className="w-full py-4 mt-2 bg-white text-black font-bold uppercase tracking-widest hover:bg-gold-500 transition-colors">
+                      Continue to Deposit
+                    </button>
+                 </form>
                </div>
-               <div>
-                 <label className="block text-xs uppercase tracking-wider text-neutral-500 mb-2">CVC</label>
-                 <input type="text" className="w-full bg-black border border-white/10 p-3 text-white focus:outline-none focus:border-gold-500 transition-colors" placeholder="***" required />
+             ) : (
+               <div className="animate-in slide-in-from-right-4 fade-in duration-300">
+                 <div className="mb-6">
+                    <button onClick={() => setStep(1)} className="text-gold-500 text-sm flex items-center gap-1 mb-4 hover:text-gold-400">
+                      <ChevronRight className="w-4 h-4 rotate-180" /> Back
+                    </button>
+                    <CreditCard className="w-10 h-10 text-gold-500 mb-4" />
+                    <h3 className="font-serif text-3xl font-bold mb-2">Secure Deposit</h3>
+                    <p className="text-neutral-400 text-sm">A fully refundable deposit to secure your reservation.</p>
+                 </div>
+
+                 <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); setIsSubmitted(true); }}>
+                    <div>
+                      <label className="block text-xs uppercase tracking-wider text-neutral-500 mb-2">Card Number</label>
+                      <input type="text" className="w-full bg-black border border-white/10 p-3 text-white focus:outline-none focus:border-gold-500 transition-colors tracking-widest" placeholder="**** **** **** ****" required />
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                       <div>
+                         <label className="block text-xs uppercase tracking-wider text-neutral-500 mb-2">Expiry Date</label>
+                         <input type="text" className="w-full bg-black border border-white/10 p-3 text-white focus:outline-none focus:border-gold-500 transition-colors" placeholder="MM/YY" required />
+                       </div>
+                       <div>
+                         <label className="block text-xs uppercase tracking-wider text-neutral-500 mb-2">CVC</label>
+                         <input type="text" className="w-full bg-black border border-white/10 p-3 text-white focus:outline-none focus:border-gold-500 transition-colors" placeholder="***" required />
+                       </div>
+                    </div>
+                    <div className="pt-4 border-t border-white/10 flex justify-between items-center mb-2 mt-4">
+                       <span className="text-sm font-bold uppercase tracking-wider">Deposit Amount</span>
+                       <span className="text-gold-400 font-serif text-xl font-bold">ZMW 5,000</span>
+                    </div>
+                    <button type="submit" className="w-full py-4 mt-2 bg-gold-500 text-black font-bold uppercase tracking-widest hover:bg-gold-400 transition-colors shadow-lg shadow-gold-500/20">
+                      Confirm Reservation
+                    </button>
+                    <p className="text-center text-[10px] text-neutral-600 mt-4 uppercase tracking-widest flex items-center justify-center gap-1">
+                       <ShieldCheck className="w-3 h-3" /> Encrypted Payment Gateway Mock
+                    </p>
+                 </form>
                </div>
-            </div>
-            <div className="pt-4 border-t border-white/10 flex justify-between items-center mb-6">
-               <span className="text-sm font-bold uppercase tracking-wider">Deposit Amount</span>
-               <span className="text-gold-400 font-serif text-xl font-bold">ZMW 10,000</span>
-            </div>
-            <button className="w-full py-4 bg-gold-500 text-black font-bold uppercase tracking-widest hover:bg-gold-400 transition-colors shadow-lg shadow-gold-500/20">
-              Pay Deposit Securely
-            </button>
-            <p className="text-center text-[10px] text-neutral-600 mt-4 uppercase tracking-widest flex items-center justify-center gap-1">
-               <ShieldCheck className="w-3 h-3" /> Encrypted Payment Gateway Mock
-            </p>
-         </form>
+             )}
+           </>
+         ) : (
+           <div className="py-8 text-center animate-in zoom-in-95 duration-500">
+              <div className="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                 <CheckCircle className="w-10 h-10 text-green-500" />
+              </div>
+              <h3 className="font-serif text-3xl font-bold mb-2 text-white">Reservation Confirmed!</h3>
+              <p className="text-neutral-400 mb-6 leading-relaxed">
+                Thank you! The <strong className="text-white font-medium">{carName}</strong> is successfully reserved. We have sent a confirmation email with the details and viewing schedule.
+              </p>
+              <button onClick={onClose} className="px-8 py-3 bg-white text-black font-bold uppercase tracking-widest hover:bg-gold-500 transition-colors text-sm">
+                Return to Gallery
+              </button>
+           </div>
+         )}
       </div>
     </div>
   )
@@ -208,7 +278,7 @@ const FeaturedVehicles = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedCar, setSelectedCar] = useState("");
 
-  const handleDepositClick = (carName: string) => {
+  const handleReserveClick = (carName: string) => {
     setSelectedCar(carName);
     setModalOpen(true);
   };
@@ -263,8 +333,8 @@ const FeaturedVehicles = () => {
                   <a href="#contact" className="flex-1 py-3 bg-white text-black text-center font-bold uppercase tracking-wider text-xs hover:bg-gold-500 transition-colors">
                     Inquire Now
                   </a>
-                  <button onClick={() => handleDepositClick(car.name)} className="py-3 px-4 border border-white/20 text-white hover:border-gold-500 hover:text-gold-500 transition-colors flex items-center justify-center cursor-pointer" aria-label="Deposit">
-                    <CreditCard className="w-4 h-4" />
+                  <button onClick={() => handleReserveClick(car.name)} className="flex-1 py-3 px-4 border border-white/20 text-white hover:border-gold-500 hover:text-gold-500 transition-colors flex items-center justify-center gap-2 cursor-pointer font-bold uppercase tracking-wider text-xs" aria-label="Reserve Vehicle">
+                    <Clock className="w-4 h-4" /> Reserve
                   </button>
                 </div>
               </div>
@@ -272,7 +342,7 @@ const FeaturedVehicles = () => {
           ))}
         </div>
       </div>
-      <DepositModal isOpen={modalOpen} onClose={() => setModalOpen(false)} carName={selectedCar} />
+      <ReservationModal isOpen={modalOpen} onClose={() => setModalOpen(false)} carName={selectedCar} />
     </section>
   );
 };
@@ -280,7 +350,7 @@ const FeaturedVehicles = () => {
 // Component: Services & Why Choose Us
 const ServicesAndTrust = () => {
   const services = [
-    { icon: <Car />, title: "Vehicle Sales", desc: "Premium new and pre-owned luxury vehicles." },
+    { icon: <Car />, title: "Vehicle Sales", desc: "Reliable new and pre-owned modern vehicles." },
     { icon: <MapPin />, title: "Vehicle Delivery", desc: "Safe and secure transport right to your door." },
     { icon: <Search />, title: "Vehicle Sourcing", desc: "Looking for something specific? We'll find it." },
     { icon: <CreditCard />, title: "Trade-In Options", desc: "Competitive valuation for your current vehicle." },
@@ -292,7 +362,7 @@ const ServicesAndTrust = () => {
         <div>
           <span className="uppercase tracking-[0.2em] text-gold-500 text-sm font-bold block mb-4">Our Expertise</span>
           <h2 className="font-serif text-4xl md:text-5xl font-bold mb-8 leading-tight">Beyond finding your dream car.</h2>
-          <p className="text-neutral-400 mb-10 text-lg">We offer a comprehensive suite of automotive services designed to make your purchasing experience as seamless and luxurious as the vehicles we sell.</p>
+          <p className="text-neutral-400 mb-10 text-lg">We offer a comprehensive suite of automotive services designed to make your purchasing experience as seamless as the vehicles we sell.</p>
           
           <div className="grid sm:grid-cols-2 gap-8">
             {services.map((srv, idx) => (
@@ -463,7 +533,7 @@ const Footer = () => {
         </div>
         
         <div className="text-neutral-500 text-sm uppercase tracking-wider text-center flex flex-col md:flex-row justify-center gap-4 md:gap-8">
-           <span>Premium Cars</span>
+           <span>Quality Cars</span>
            <span className="hidden md:inline">•</span>
            <span>Trusted Dealer</span>
         </div>
